@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "literature_review_outline_manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "case_id", "approval_status", "sections"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": ["pending", "approved", "revision_requested"]
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["section_id", "section_title", "purpose", "claims_to_cover", "planned_citations", "status"],
+        "properties": {
+          "section_id": {
+            "type": "string"
+          },
+          "section_title": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "claims_to_cover": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "planned_citations": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "approved", "locked"]
+          }
+        }
+      }
+    }
+  }
+}

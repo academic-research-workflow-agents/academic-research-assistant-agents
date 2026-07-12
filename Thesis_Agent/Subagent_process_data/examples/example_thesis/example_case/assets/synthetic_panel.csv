@@ -1,0 +1,5 @@
+unit_id,period,outcome,treatment,covariate
+U001,1,10.0,0,2.5
+U001,2,11.2,1,2.7
+U002,1,8.4,0,1.8
+U002,2,8.9,0,1.9

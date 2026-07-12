@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Regression Asset Contract",
+  "type": "object",
+  "required": [
+    "asset_id",
+    "path",
+    "source_type",
+    "origin_label",
+    "panel_id",
+    "panel_group",
+    "panel_grain",
+    "y_id",
+    "x_id",
+    "c_bundle_id",
+    "builder_manifest"
+  ]
+}

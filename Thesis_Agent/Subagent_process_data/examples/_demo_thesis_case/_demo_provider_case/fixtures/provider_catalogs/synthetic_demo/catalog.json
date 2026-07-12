@@ -1,0 +1,77 @@
+{
+  "source_assets": [
+    {
+      "source_id": "synthetic_panel",
+      "source_type": "synthetic_panel",
+      "provider_id": "synthetic_demo",
+      "path": "assets/synthetic_panel.csv",
+      "panel_grain": "unit_year",
+      "key_template": "entity_year",
+      "key_columns": {
+        "entity_key": "unit_id",
+        "time_key": "year"
+      },
+      "standardization": ["stringify_entity_key", "int_time_key"]
+    }
+  ],
+  "candidate_variables": [
+    {
+      "id": "outcome",
+      "role": "dependent_variable",
+      "provider_id": "synthetic_demo",
+      "source_id": "synthetic_panel",
+      "field_token": "outcome",
+      "alias": "outcome",
+      "label": "Synthetic outcome",
+      "panel_group": "demo_panel",
+      "panel_grain": "unit_year",
+      "key_template": "entity_year"
+    },
+    {
+      "id": "treatment_a",
+      "role": "independent_variable",
+      "provider_id": "synthetic_demo",
+      "source_id": "synthetic_panel",
+      "field_token": "treatment_a",
+      "alias": "treatment_a",
+      "label": "Synthetic treatment A",
+      "panel_group": "demo_panel",
+      "panel_grain": "unit_year",
+      "key_template": "entity_year"
+    },
+    {
+      "id": "treatment_b",
+      "role": "independent_variable",
+      "provider_id": "synthetic_demo",
+      "source_id": "synthetic_panel",
+      "field_token": "treatment_b",
+      "alias": "treatment_b",
+      "label": "Synthetic treatment B",
+      "panel_group": "demo_panel",
+      "panel_grain": "unit_year",
+      "key_template": "entity_year"
+    },
+    {
+      "id": "control_size",
+      "role": "control_variable",
+      "provider_id": "synthetic_demo",
+      "source_id": "synthetic_panel",
+      "field_token": "control_size",
+      "alias": "control_size",
+      "label": "Synthetic size control",
+      "panel_group": "demo_panel",
+      "panel_grain": "unit_year",
+      "key_template": "entity_year"
+    }
+  ],
+  "control_bundles": [
+    {
+      "id": "baseline_controls",
+      "label": "Baseline controls",
+      "variable_ids": ["control_size"],
+      "panel_group": "demo_panel",
+      "panel_grain": "unit_year",
+      "key_template": "entity_year"
+    }
+  ]
+}

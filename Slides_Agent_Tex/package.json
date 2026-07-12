@@ -1,0 +1,16 @@
+{
+  "name": "slides-agent-tex",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A TeX/Beamer-first AI-native slide authoring agent framework.",
+  "scripts": {
+    "inspect": "node scripts/inspect-case.mjs",
+    "check-source": "node scripts/check-source.mjs",
+    "render": "node scripts/render.mjs",
+    "render:png": "node scripts/render.mjs --png-only"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

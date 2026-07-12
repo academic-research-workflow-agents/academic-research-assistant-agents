@@ -1,0 +1,5 @@
+unit_id,year,outcome,treatment_a,treatment_b,control_size
+A,2024,10,1,0,100
+A,2025,12,1,1,110
+B,2024,8,0,1,90
+B,2025,9,0,1,95

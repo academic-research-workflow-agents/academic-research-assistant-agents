@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stata"
+  short_description: "Write, run, and debug Stata code"
+  default_prompt: "Use $stata to write, run, debug, or explain Stata code for this task."

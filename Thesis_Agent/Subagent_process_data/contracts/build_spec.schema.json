@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Regression Data Build Contract",
+  "type": "object",
+  "required": [
+    "source_assets",
+    "candidate_variables",
+    "control_bundles",
+    "build_tasks",
+    "output_policy",
+    "sync_targets"
+  ],
+  "properties": {
+    "source_assets": {
+      "type": "array",
+      "items": { "$ref": "source_asset.schema.json" }
+    },
+    "candidate_variables": {
+      "type": "object",
+      "required": [
+        "dependent_variables",
+        "independent_variables",
+        "control_variables"
+      ],
+      "properties": {
+        "dependent_variables": {
+          "type": "array",
+          "items": { "$ref": "candidate_variable.schema.json" }
+        },
+        "independent_variables": {
+          "type": "array",
+          "items": { "$ref": "candidate_variable.schema.json" }
+        },
+        "control_variables": {
+          "type": "array",
+          "items": { "$ref": "candidate_variable.schema.json" }
+        }
+      }
+    },
+    "control_bundles": {
+      "type": "array",
+      "items": { "$ref": "control_bundle.schema.json" }
+    },
+    "build_tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mode"],
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["explicit_combos", "cartesian_by_group"]
+          },
+          "combos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["y_id", "x_id", "c_bundle_id"]
+            }
+          }
+        }
+      }
+    },
+    "output_policy": {
+      "type": "object",
+      "required": [
+        "mode",
+        "output_format",
+        "naming_pattern",
+        "sync_to_regression",
+        "include_manifest",
+        "allow_failed_combos"
+      ]
+    },
+    "sync_targets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["regression_data_manifest"]
+      }
+    }
+  }
+}

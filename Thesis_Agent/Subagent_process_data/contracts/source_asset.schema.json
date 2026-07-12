@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Source Asset",
+  "type": "object",
+  "required": [
+    "source_id",
+    "source_type",
+    "provider_id",
+    "panel_grain",
+    "key_template"
+  ],
+  "properties": {
+    "source_id": { "type": "string" },
+    "source_type": { "type": "string" },
+    "provider_id": { "type": "string" },
+    "path": { "type": "string" },
+    "provider_ref": { "type": "string" },
+    "panel_grain": { "type": "string" },
+    "key_template": { "type": "string" },
+    "notes": { "type": "string" },
+    "key_columns": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "display_columns": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "standardization": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "anyOf": [
+    { "required": ["path"] },
+    { "required": ["provider_ref"] }
+  ]
+}

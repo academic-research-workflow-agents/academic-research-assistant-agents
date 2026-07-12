@@ -1,0 +1,7 @@
+{
+  "case_id": "example_beamer_deck",
+  "case_type": "template_source",
+  "root_forbidden_terms": [
+    "private_name_placeholder"
+  ]
+}

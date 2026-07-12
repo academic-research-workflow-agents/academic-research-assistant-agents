@@ -1,0 +1,30 @@
+{
+  "candidate_variables": [
+    {
+      "field_token": "outcome",
+      "source_id": "synthetic_panel",
+      "role": "outcome"
+    },
+    {
+      "field_token": "treatment",
+      "source_id": "synthetic_panel",
+      "role": "treatment"
+    },
+    {
+      "field_token": "covariate",
+      "source_id": "synthetic_panel",
+      "role": "control"
+    }
+  ],
+  "source_assets": [
+    {
+      "source_id": "synthetic_panel",
+      "path": "assets/synthetic_panel.csv",
+      "key_columns": {
+        "entity_key": "unit_id",
+        "time_key": "period"
+      }
+    }
+  ],
+  "provider_id": "synthetic_demo"
+}

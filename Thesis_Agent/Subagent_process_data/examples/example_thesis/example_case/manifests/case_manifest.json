@@ -1,0 +1,6 @@
+{
+  "case_id": "example_case",
+  "case_type": "process_data",
+  "provider": "synthetic_demo",
+  "status": "skeleton"
+}

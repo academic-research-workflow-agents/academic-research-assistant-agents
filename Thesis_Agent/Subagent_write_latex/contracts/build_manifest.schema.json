@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "writing_build_manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "authoring_mode",
+    "template_asset_path",
+    "template_worktree_path",
+    "generated_chapter_dir",
+    "rendered_asset_dir",
+    "status",
+    "compiled_outputs"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "authoring_mode": {
+      "type": "string",
+      "enum": [
+        "markdown",
+        "direct_latex"
+      ]
+    },
+    "template_asset_path": {
+      "type": "string"
+    },
+    "template_worktree_path": {
+      "type": "string"
+    },
+    "generated_chapter_dir": {
+      "type": "string"
+    },
+    "rendered_asset_dir": {
+      "type": "string"
+    },
+    "last_scan_report": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_materialized_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_injected_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_compiled_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "last_compile_stage": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "blind",
+        "defense",
+        "final",
+        "all",
+        null
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "bootstrapped",
+        "scanned",
+        "materialized",
+        "injected",
+        "compiled",
+        "source_guard_failed",
+        "bibliography_validation_failed",
+        "validation_failed"
+      ]
+    },
+    "compiled_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Academic Humanizer (English, Personal)"
+  short_description: "Rewrite empirical paper English in the user's cleaner style."
+  default_prompt: "Use $humanizer-academic-en-personal to revise this economics or finance paper section in precise academic English without inventing content or copying format."
+
+policy:
+  allow_implicit_invocation: true

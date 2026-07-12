@@ -1,0 +1,7 @@
+interface:
+  display_name: "Academic Humanizer (English)"
+  short_description: "Rewrite English academic prose without generic AI tells."
+  default_prompt: "Use $humanizer-academic-en to revise this paper section into precise academic prose without inventing content or imposing formatting."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Panel Manifest Row",
+  "type": "object",
+  "required": [
+    "panel_id",
+    "panel_group",
+    "panel_grain",
+    "key_template",
+    "y_id",
+    "x_id",
+    "c_bundle_id",
+    "status",
+    "panel_path",
+    "rule_report_path",
+    "exceptions_path",
+    "exception_count",
+    "non_missing_summary",
+    "synced_to_regression"
+  ]
+}

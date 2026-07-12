@@ -1,0 +1,72 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TeX and Beamer outputs
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+
+# Generated outputs and local worktrees
+outputs/
+**/outputs/
+build/
+dist/
+coverage/
+
+# Generated or private research artifacts
+*.pdf
+*.docx
+*.xlsx
+*.xls
+*.dta
+*.sav
+*.rds
+*.zip
+*.7z
+*.rar
+archive/
+archives/
+archived_runs/
+private/
+data/private/
+real_data/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

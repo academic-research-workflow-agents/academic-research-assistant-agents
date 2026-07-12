@@ -1,0 +1,7 @@
+interface:
+  display_name: "学术 Humanizer（中文，私人版）"
+  short_description: "按作者经金实证写法改写中文论文，减少明显 AI 味。"
+  default_prompt: "Use $humanizer-academic-zh-personal to revise this Chinese economics or finance paper section in a cleaner academic style without inventing content or copying format."
+
+policy:
+  allow_implicit_invocation: true

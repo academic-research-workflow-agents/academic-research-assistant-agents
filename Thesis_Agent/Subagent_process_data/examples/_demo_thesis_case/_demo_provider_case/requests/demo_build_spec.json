@@ -1,0 +1,26 @@
+{
+  "provider_ids": ["synthetic_demo"],
+  "candidate_variables": {
+    "dependent_variables": [],
+    "independent_variables": [],
+    "control_variables": []
+  },
+  "control_bundles": [],
+  "source_assets": [],
+  "build_tasks": [
+    {
+      "mode": "cartesian_by_group"
+    }
+  ],
+  "output_policy": {
+    "mode": "one_panel_per_regression_combo",
+    "output_format": "csv",
+    "rule_report_format": "csv",
+    "exceptions_format": "csv",
+    "naming_pattern": "{panel_group}__{y_alias}__{x_alias}__{c_bundle_id}",
+    "sync_to_regression": false,
+    "include_manifest": true,
+    "allow_failed_combos": false
+  },
+  "sync_targets": []
+}

@@ -1,0 +1,9 @@
+{
+  "templates": [
+    {
+      "template_id": "city_year",
+      "required_keys": ["entity_key", "time_key"],
+      "description": "Standard city-year panel key"
+    }
+  ]
+}

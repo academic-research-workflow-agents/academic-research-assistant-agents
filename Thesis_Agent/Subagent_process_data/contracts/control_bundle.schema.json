@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Control Bundle",
+  "type": "object",
+  "required": [
+    "id",
+    "label",
+    "variable_ids",
+    "panel_group",
+    "panel_grain",
+    "key_template"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "label": { "type": "string" },
+    "variable_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "panel_group": { "type": "string" },
+    "panel_grain": { "type": "string" },
+    "key_template": { "type": "string" }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "templates": [
+    {
+      "template_id": "city_year",
+      "description": "City-year panel template.",
+      "key_roles": {
+        "time_key": {
+          "aliases": ["year", "年份", "年度", "时间", "年份year"]
+        },
+        "entity_key": {
+          "aliases": ["city_code", "城市代码", "地级市代码", "prefecture_code"]
+        },
+        "entity_name": {
+          "aliases": ["city", "city_name", "城市", "地级市", "城市名称"]
+        },
+        "parent_entity_key": {
+          "aliases": ["province_code", "省份代码", "省级代码"]
+        },
+        "parent_entity_name": {
+          "aliases": ["province", "province_name", "省份", "省份名称"]
+        }
+      },
+      "required_roles": ["time_key", "entity_key"],
+      "display_roles": ["entity_name", "parent_entity_key", "parent_entity_name"],
+      "uniqueness_roles": ["time_key", "entity_key"],
+      "validation_rules": {
+        "name_code_pairs": [
+          {
+            "code_role": "entity_key",
+            "name_role": "entity_name"
+          },
+          {
+            "code_role": "parent_entity_key",
+            "name_role": "parent_entity_name"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "case_id": "example_case",
+  "case_type": "integration",
+  "child_cases": [],
+  "readiness_status": "not_started"
+}

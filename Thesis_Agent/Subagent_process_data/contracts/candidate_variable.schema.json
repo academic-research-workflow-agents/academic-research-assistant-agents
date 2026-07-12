@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Candidate Variable",
+  "type": "object",
+  "required": [
+    "id",
+    "role",
+    "provider_id",
+    "source_id",
+    "field_token",
+    "alias",
+    "label",
+    "panel_group",
+    "panel_grain",
+    "key_template"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "role": {
+      "type": "string",
+      "enum": ["dependent_variable", "independent_variable", "control_variable"]
+    },
+    "provider_id": { "type": "string" },
+    "source_id": { "type": "string" },
+    "file_token": { "type": "string" },
+    "asset_ref": { "type": "string" },
+    "field_token": { "type": "string" },
+    "alias": { "type": "string" },
+    "label": { "type": "string" },
+    "panel_group": { "type": "string" },
+    "panel_grain": { "type": "string" },
+    "key_template": { "type": "string" },
+    "is_derived": { "type": "boolean", "default": false },
+    "derivation_spec": {
+      "type": ["object", "null"]
+    }
+  }
+}
