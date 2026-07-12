@@ -1,5 +1,7 @@
 param(
   [string]$Version = "0.1.0",
+  [ValidateSet("thesis", "slides", "bundle", "all")]
+  [string]$Package = "bundle",
   [string]$OutputRoot = ""
 )
 
@@ -12,11 +14,37 @@ if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
 }
 
 $OutputRoot = [System.IO.Path]::GetFullPath($OutputRoot)
-$PackageName = "Academic_Research_Workflow_Agents_v$Version"
-$StageRoot = Join-Path $env:TEMP "$PackageName-stage"
-$StageDir = Join-Path $StageRoot $PackageName
-$ZipPath = Join-Path $OutputRoot "$PackageName.zip"
-$HashPath = "$ZipPath.sha256.txt"
+
+function Get-PackageDefinition {
+  param([string]$PackageName, [string]$Version)
+
+  switch ($PackageName) {
+    "thesis" {
+      return [pscustomobject]@{
+        Package = "thesis"
+        ArchiveBaseName = "Academic_Thesis_Agent_v$Version"
+        IncludedRoots = @("Thesis_Agent")
+      }
+    }
+    "slides" {
+      return [pscustomobject]@{
+        Package = "slides"
+        ArchiveBaseName = "Academic_Slides_Agent_Tex_v$Version"
+        IncludedRoots = @("Slides_Agent_Tex")
+      }
+    }
+    "bundle" {
+      return [pscustomobject]@{
+        Package = "bundle"
+        ArchiveBaseName = "Academic_Research_Workflow_Agents_Bundle_v$Version"
+        IncludedRoots = @("Thesis_Agent", "Slides_Agent_Tex")
+      }
+    }
+    default {
+      throw "Unsupported package: $PackageName"
+    }
+  }
+}
 
 function Test-ExcludedPath {
   param([string]$Path)
@@ -35,49 +63,99 @@ function Test-ExcludedPath {
   return $false
 }
 
-New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
-if (Test-Path -LiteralPath $StageRoot) {
-  Remove-Item -LiteralPath $StageRoot -Recurse -Force
+function Test-IncludedPath {
+  param(
+    [string]$Path,
+    [string[]]$IncludedRoots
+  )
+
+  $normalized = $Path -replace "\\", "/"
+  $rootFiles = @("README.md", "TERMS.md", "VERSION.txt")
+  if ($rootFiles -contains $normalized) {
+    return $true
+  }
+
+  foreach ($root in $IncludedRoots) {
+    if ($normalized -eq $root -or $normalized.StartsWith("$root/")) {
+      return $true
+    }
+  }
+  return $false
 }
-New-Item -ItemType Directory -Force -Path $StageDir | Out-Null
+
+function New-OnePackage {
+  param(
+    [object]$Definition,
+    [string[]]$TrackedFiles
+  )
+
+  $stageRoot = Join-Path $env:TEMP "$($Definition.ArchiveBaseName)-stage"
+  $stageDir = Join-Path $stageRoot $Definition.ArchiveBaseName
+  $zipPath = Join-Path $OutputRoot "$($Definition.ArchiveBaseName).zip"
+  $hashPath = "$zipPath.sha256.txt"
+
+  if (Test-Path -LiteralPath $stageRoot) {
+    Remove-Item -LiteralPath $stageRoot -Recurse -Force
+  }
+  New-Item -ItemType Directory -Force -Path $stageDir | Out-Null
+
+  try {
+    foreach ($relativePath in $TrackedFiles) {
+      if (Test-ExcludedPath -Path $relativePath) {
+        continue
+      }
+      if (-not (Test-IncludedPath -Path $relativePath -IncludedRoots $Definition.IncludedRoots)) {
+        continue
+      }
+
+      $source = Join-Path $RepoRoot $relativePath
+      $target = Join-Path $stageDir $relativePath
+      $targetParent = Split-Path -Parent $target
+      New-Item -ItemType Directory -Force -Path $targetParent | Out-Null
+      Copy-Item -LiteralPath $source -Destination $target -Force
+    }
+
+    Set-Content -LiteralPath (Join-Path $stageDir "VERSION.txt") -Value $Version -Encoding UTF8
+
+    if (Test-Path -LiteralPath $zipPath) {
+      Remove-Item -LiteralPath $zipPath -Force
+    }
+    if (Test-Path -LiteralPath $hashPath) {
+      Remove-Item -LiteralPath $hashPath -Force
+    }
+
+    Compress-Archive -LiteralPath $stageDir -DestinationPath $zipPath -CompressionLevel Optimal
+    $hash = Get-FileHash -LiteralPath $zipPath -Algorithm SHA256
+    Set-Content -LiteralPath $hashPath -Value "$($hash.Hash)  $([System.IO.Path]::GetFileName($zipPath))" -Encoding ASCII
+
+    return [pscustomobject]@{
+      Package = $Definition.Package
+      Version = $Version
+      ZipPath = $zipPath
+      Sha256 = $hash.Hash
+      HashPath = $hashPath
+    }
+  }
+  finally {
+    if (Test-Path -LiteralPath $stageRoot) {
+      Remove-Item -LiteralPath $stageRoot -Recurse -Force
+    }
+  }
+}
+
+New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
 
 Push-Location $RepoRoot
 try {
-  $trackedFiles = git ls-files
-  foreach ($relativePath in $trackedFiles) {
-    if (Test-ExcludedPath -Path $relativePath) {
-      continue
-    }
-    $source = Join-Path $RepoRoot $relativePath
-    $target = Join-Path $StageDir $relativePath
-    $targetParent = Split-Path -Parent $target
-    New-Item -ItemType Directory -Force -Path $targetParent | Out-Null
-    Copy-Item -LiteralPath $source -Destination $target -Force
+  $trackedFiles = @(git ls-files)
+  $packages = if ($Package -eq "all") { @("thesis", "slides", "bundle") } else { @($Package) }
+  $results = foreach ($packageName in $packages) {
+    $definition = Get-PackageDefinition -PackageName $packageName -Version $Version
+    New-OnePackage -Definition $definition -TrackedFiles $trackedFiles
   }
 
-  Set-Content -LiteralPath (Join-Path $StageDir "VERSION.txt") -Value $Version -Encoding UTF8
-
-  if (Test-Path -LiteralPath $ZipPath) {
-    Remove-Item -LiteralPath $ZipPath -Force
-  }
-  if (Test-Path -LiteralPath $HashPath) {
-    Remove-Item -LiteralPath $HashPath -Force
-  }
-
-  Compress-Archive -LiteralPath $StageDir -DestinationPath $ZipPath -CompressionLevel Optimal
-  $hash = Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256
-  Set-Content -LiteralPath $HashPath -Value "$($hash.Hash)  $([System.IO.Path]::GetFileName($ZipPath))" -Encoding ASCII
-
-  [pscustomobject]@{
-    Version = $Version
-    ZipPath = $ZipPath
-    Sha256 = $hash.Hash
-    HashPath = $HashPath
-  } | ConvertTo-Json
+  $results | ConvertTo-Json
 }
 finally {
   Pop-Location
-  if (Test-Path -LiteralPath $StageRoot) {
-    Remove-Item -LiteralPath $StageRoot -Recurse -Force
-  }
 }
