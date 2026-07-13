@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "case_id": "example_presentation",
+  "case_type": "presentation",
+  "template_ref": "examples/example_research/example_presentation/templates/public-minimal",
+  "content_mode": "evidence_bound",
+  "sources": [
+    {
+      "id": "synthetic-brief",
+      "type": "user_material",
+      "path": "inputs/brief.md"
+    }
+  ],
+  "slides": [
+    {
+      "id": "title",
+      "source_refs": ["synthetic-brief"],
+      "transform": "verbatim"
+    },
+    {
+      "id": "capabilities",
+      "source_refs": ["synthetic-brief"],
+      "transform": "compress"
+    },
+    {
+      "id": "traceability",
+      "source_refs": ["synthetic-brief"],
+      "transform": "extract"
+    }
+  ]
+}

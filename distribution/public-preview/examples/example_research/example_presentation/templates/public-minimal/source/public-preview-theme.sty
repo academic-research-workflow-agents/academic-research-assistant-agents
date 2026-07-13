@@ -1,0 +1,27 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{public-preview-theme}[2026/07/13 Public preview Beamer theme]
+\RequirePackage{fontspec}
+\setsansfont{TeX Gyre Heros}
+\definecolor{ResearchNavy}{HTML}{17324D}
+\definecolor{EvidenceTeal}{HTML}{147D82}
+\definecolor{PaperGray}{HTML}{F3F6F8}
+\mode<presentation>{
+  \usetheme{default}
+  \setbeamercolor{normal text}{fg=ResearchNavy,bg=white}
+  \setbeamercolor{structure}{fg=EvidenceTeal}
+  \setbeamercolor{frametitle}{fg=white,bg=ResearchNavy}
+  \setbeamercolor{block title}{fg=white,bg=EvidenceTeal}
+  \setbeamercolor{block body}{fg=ResearchNavy,bg=PaperGray}
+  \setbeamercolor{block title alerted}{fg=white,bg=ResearchNavy}
+  \setbeamercolor{block body alerted}{fg=ResearchNavy,bg=PaperGray}
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{footline}{
+    \leavevmode\hbox{%
+      \begin{beamercolorbox}[wd=.85\paperwidth,ht=2.6ex,dp=1.1ex,leftskip=1em]{author in head/foot}%
+        Academic Research Assistant AI Agents — Public Preview
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.15\paperwidth,ht=2.6ex,dp=1.1ex,center]{date in head/foot}%
+        \insertframenumber
+      \end{beamercolorbox}}
+  }
+}

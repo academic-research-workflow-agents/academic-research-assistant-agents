@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "case_id": "example_data",
+  "inputs": [
+    {
+      "id": "synthetic-input",
+      "path": "inputs/synthetic_panel.csv",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  ],
+  "operations": [
+    "normalize_column_names",
+    "validate_panel_keys"
+  ],
+  "outputs": [
+    {
+      "id": "validated-panel",
+      "path": "outputs/data/validated_panel.csv",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "record_mode": "synthetic"
+}

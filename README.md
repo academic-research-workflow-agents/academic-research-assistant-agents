@@ -1,96 +1,67 @@
-# Academic Research Workflow Agents
+# 学术研究辅助 AI Agents
 
-中文名：学术研究工作流智能体框架
+English name: **Academic Research Assistant AI Agents**
 
-本仓库是付费版源码仓库，用于管理和打包两个可独立使用、也可组合使用的学术工作流 Agent 框架。
+这是一个单一的学术研究辅助框架，把可审计的研究流程拆成七个协作 subagent：
 
-This private repository is the paid-source repository for two academic workflow agent frameworks.
+- `Subagent_evidence`：学术来源、证据卡、引用和页码记录
+- `Subagent_process_data`：数据清理、拼接和分析资产
+- `Subagent_regress_stata`：Stata 执行、表图、诊断和结构化结果
+- `Subagent_format_latex`：用户原文的 LaTeX 排版、表图和参考文献处理
+- `Subagent_presentation`：有来源约束的 TeX/Beamer 演示文稿
+- `Subagent_integrate`：按请求组合所需能力
+- `Subagent_check`：路径、契约、来源追踪、编译和边界检查
 
-## 项目是什么
+## 内容边界
 
-`Academic Research Workflow Agents` 不是单个论文模板，也不是一次性的 ChatGPT 提示词集合。它是一套面向学术研究流程的 Agent 框架，把论文阅读、数据处理、回归分析、LaTeX 论文写作和 TeX/Beamer 学术汇报制作拆成可复用的子 agent、脚本、契约和示例。
+框架可以从用户提供的学术来源中提取和归类证据，可以执行数据与实证计算，也可以把用户原文排成 LaTeX 文档。
 
-## 两个产品
+它不会创建可直接提交的学术正文，也不会新增研究主张、发现、解释或结论。演示文稿中的可见信息必须来自已登记的用户材料或证据资产。
 
-### Thesis Agent
-
-路径：`Thesis_Agent/`
-
-面向完整论文写作流程：
-
-- 论文阅读与材料整理
-- 数据准备与面板数据构造
-- Stata 回归与结果整理
-- LaTeX 论文初稿、章节整合与润色
-- 提交前结构检查
-
-适合需要把“读文献、做实证、写论文、检查提交材料”串成一个可重复流程的用户。
-
-### Slides Agent Tex
-
-路径：`Slides_Agent_Tex/`
-
-面向 TeX/Beamer 学术 PPT 制作：
-
-- Beamer 模板适配
-- 学术汇报 deck 内容生成
-- 图表、参考文献和素材组织
-- 编译、渲染和检查
-
-适合需要用 TeX/Beamer 做课程汇报、论文答辩、学术报告或项目展示的用户。
-
-## 售卖方式
-
-源码在一个私有仓库中维护，但发布和售卖时拆成三个版本包：
-
-- `thesis`：只包含 `Thesis_Agent/`
-- `slides`：只包含 `Slides_Agent_Tex/`
-- `bundle`：同时包含两个 agent
-
-这样可以保持源码维护一致，同时让用户按自己的需求购买论文写作、PPT 制作或组合包。
-
-## 公开预览
-
-公开介绍和 demo 在：
+## Case 结构
 
 ```text
-https://github.com/academic-research-workflow-agents/agents-preview
+Subagent_<name>/examples/<research_case>/<child_case>/
 ```
 
-公开仓库只用于说明项目能力、展示 synthetic demo 和提供申请方式，不包含完整付费版 agent。
+共享仓库中的 `example_research/example_case` 只用于验证结构。真实材料应放在私有工作目录。
 
-## 打包
-
-生成组合包：
+## Beamer 命令
 
 ```powershell
-.\scripts\New-PaidReleasePackage.ps1 -Version 0.1.0 -Package bundle
+npm run presentation:inspect -- --case examples/example_research/example_presentation
+npm run presentation:check-source -- --case examples/example_research/example_presentation
+npm run presentation:render -- --case examples/example_research/example_presentation
+npm run presentation:render:png -- --case examples/example_research/example_presentation
 ```
 
-生成单独论文写作包：
+## 检查与发布
 
 ```powershell
-.\scripts\New-PaidReleasePackage.ps1 -Version 0.1.0 -Package thesis
+npm run check:terminology
+python -m pytest
+npm run preview:check
+npm run release:private -- -Version 0.2.0
 ```
 
-生成单独 TeX PPT 包：
+发布脚本只生成一个 `Academic_Research_Assistant_AI_Agents_v<version>.zip`。
+
+## Private 与 Public Preview
+
+本 private 仓库是完整产品和 public preview 的唯一内容源。公开内容维护在
+`distribution/public-preview/`，通过以下命令单向同步到 sibling preview 仓库：
 
 ```powershell
-.\scripts\New-PaidReleasePackage.ps1 -Version 0.1.0 -Package slides
+npm run preview:sync -- --dry-run
+npm run preview:sync
+# 在 preview 仓库审阅并提交受控改动后：
+npm run preview:check
 ```
 
-一次生成三种包：
+同步器只覆盖 allowlist 中的公开文件并清理不再公开的 tracked 文件；目标仓库中不属于
+上一份同步 manifest 的未跟踪文件不会被覆盖或删除。public preview 只包含说明、静态契约记录和一个极小的
+证据约束型 Beamer 演示，不包含完整 subagent、skills 或 private 工作流脚本。
 
-```powershell
-.\scripts\New-PaidReleasePackage.ps1 -Version 0.1.0 -Package all
-```
+## 隐私
 
-输出文件包括 ZIP 和对应的 SHA256 校验文件。
-
-## 隐私边界
-
-本仓库只应保存通用框架、脚本、契约、skills 和 synthetic examples。不要提交真实论文、真实数据、机构模板、生成输出、日志、归档运行结果、API keys 或本地私人材料。
-
-## 授权
-
-本仓库和付费发布包不是开源项目。购买者仅获得对应版本的个人使用权。详见 `TERMS.md`。
+仓库只保存通用框架、脚本、契约、skills 和 synthetic examples。不要提交真实研究材料、真实数据、机构专属模板、运行输出、日志、归档、API keys 或本地私人信息。

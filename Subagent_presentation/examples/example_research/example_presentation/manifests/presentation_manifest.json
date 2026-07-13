@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "case_id": "example_presentation",
+  "case_type": "presentation",
+  "template_ref": "templates/default",
+  "content_mode": "evidence_bound",
+  "sources": [
+    {
+      "id": "synthetic-brief",
+      "type": "user_material",
+      "path": "inputs/brief.md"
+    }
+  ],
+  "slides": [
+    {
+      "id": "title",
+      "source_refs": ["synthetic-brief"],
+      "transform": "verbatim"
+    },
+    {
+      "id": "workflow",
+      "source_refs": ["synthetic-brief"],
+      "transform": "compress"
+    }
+  ],
+  "root_forbidden_terms": ["private_name_placeholder"]
+}

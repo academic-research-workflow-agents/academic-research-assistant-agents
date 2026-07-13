@@ -1,0 +1,3 @@
+display_name: Academic Evidence Extraction
+short_description: Build citation-bound evidence cards and ledgers
+default_prompt: Extract concise, page-linked evidence from one registered academic source and update the active evidence case without adding unsupported claims.

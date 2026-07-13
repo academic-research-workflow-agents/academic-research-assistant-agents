@@ -1,0 +1,3 @@
+display_name: Beamer Check
+short_description: Check provenance, compilation, and previews
+default_prompt: Validate the active presentation manifest, frame labels, source references, LaTeX build, and rendered previews.

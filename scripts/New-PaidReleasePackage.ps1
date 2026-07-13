@@ -1,48 +1,28 @@
 param(
-  [string]$Version = "0.1.0",
-  [ValidateSet("thesis", "slides", "bundle", "all")]
-  [string]$Package = "bundle",
+  [string]$Version = "0.2.0",
   [string]$OutputRoot = ""
 )
 
 $ErrorActionPreference = "Stop"
 
 $ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$RepoRoot = Resolve-Path -LiteralPath (Join-Path $ScriptRoot "..")
+$RepoRoot = (Resolve-Path -LiteralPath (Join-Path $ScriptRoot "..")).Path
 if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
   $OutputRoot = Join-Path (Split-Path -Parent $RepoRoot) "Academic_Research_Workflow_Agents_Releases"
 }
-
 $OutputRoot = [System.IO.Path]::GetFullPath($OutputRoot)
+$ArchiveBaseName = "Academic_Research_Assistant_AI_Agents_v$Version"
+$StageRoot = Join-Path ([System.IO.Path]::GetTempPath()) "$ArchiveBaseName-stage"
+$StageDir = Join-Path $StageRoot $ArchiveBaseName
+$ZipPath = Join-Path $OutputRoot "$ArchiveBaseName.zip"
+$HashPath = "$ZipPath.sha256.txt"
 
-function Get-PackageDefinition {
-  param([string]$PackageName, [string]$Version)
-
-  switch ($PackageName) {
-    "thesis" {
-      return [pscustomobject]@{
-        Package = "thesis"
-        ArchiveBaseName = "Academic_Thesis_Agent_v$Version"
-        IncludedRoots = @("Thesis_Agent")
-      }
-    }
-    "slides" {
-      return [pscustomobject]@{
-        Package = "slides"
-        ArchiveBaseName = "Academic_Slides_Agent_Tex_v$Version"
-        IncludedRoots = @("Slides_Agent_Tex")
-      }
-    }
-    "bundle" {
-      return [pscustomobject]@{
-        Package = "bundle"
-        ArchiveBaseName = "Academic_Research_Workflow_Agents_Bundle_v$Version"
-        IncludedRoots = @("Thesis_Agent", "Slides_Agent_Tex")
-      }
-    }
-    default {
-      throw "Unsupported package: $PackageName"
-    }
+function Assert-SafeStagePath {
+  param([string]$Path)
+  $resolved = [System.IO.Path]::GetFullPath($Path)
+  $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
+  if (-not $resolved.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Refusing stage path outside the system temp directory: $resolved"
   }
 }
 
@@ -51,7 +31,20 @@ function Test-ExcludedPath {
   $normalized = $Path -replace "\\", "/"
   $fileName = [System.IO.Path]::GetFileName($normalized)
 
+  if ($normalized -match "^distribution/public-preview(/|$)") {
+    return $true
+  }
+  if ($normalized -match "^scripts/(sync-public-preview|public-preview-lib)\.mjs$") {
+    return $true
+  }
+  if ($normalized -eq "tests/test_public_preview.mjs") {
+    return $true
+  }
+
   if ($normalized -match "(^|/)(outputs|node_modules|__pycache__|\.pytest_cache|\.mypy_cache|\.ruff_cache|\.venv|venv|env|build|dist|coverage|archive|archives|archived_runs|private|real_data)(/|$)") {
+    return $true
+  }
+  if ($normalized -match "(^|/)\.git") {
     return $true
   }
   if ($fileName -match "^\.env(\..*)?$") {
@@ -63,99 +56,115 @@ function Test-ExcludedPath {
   return $false
 }
 
-function Test-IncludedPath {
-  param(
-    [string]$Path,
-    [string[]]$IncludedRoots
-  )
-
-  $normalized = $Path -replace "\\", "/"
-  $rootFiles = @("README.md", "TERMS.md", "VERSION.txt")
-  if ($rootFiles -contains $normalized) {
-    return $true
-  }
-
-  foreach ($root in $IncludedRoots) {
-    if ($normalized -eq $root -or $normalized.StartsWith("$root/")) {
-      return $true
-    }
-  }
-  return $false
-}
-
-function New-OnePackage {
-  param(
-    [object]$Definition,
-    [string[]]$TrackedFiles
-  )
-
-  $stageRoot = Join-Path $env:TEMP "$($Definition.ArchiveBaseName)-stage"
-  $stageDir = Join-Path $stageRoot $Definition.ArchiveBaseName
-  $zipPath = Join-Path $OutputRoot "$($Definition.ArchiveBaseName).zip"
-  $hashPath = "$zipPath.sha256.txt"
-
-  if (Test-Path -LiteralPath $stageRoot) {
-    Remove-Item -LiteralPath $stageRoot -Recurse -Force
-  }
-  New-Item -ItemType Directory -Force -Path $stageDir | Out-Null
-
-  try {
-    foreach ($relativePath in $TrackedFiles) {
-      if (Test-ExcludedPath -Path $relativePath) {
-        continue
-      }
-      if (-not (Test-IncludedPath -Path $relativePath -IncludedRoots $Definition.IncludedRoots)) {
-        continue
-      }
-
-      $source = Join-Path $RepoRoot $relativePath
-      $target = Join-Path $stageDir $relativePath
-      $targetParent = Split-Path -Parent $target
-      New-Item -ItemType Directory -Force -Path $targetParent | Out-Null
-      Copy-Item -LiteralPath $source -Destination $target -Force
-    }
-
-    Set-Content -LiteralPath (Join-Path $stageDir "VERSION.txt") -Value $Version -Encoding UTF8
-
-    if (Test-Path -LiteralPath $zipPath) {
-      Remove-Item -LiteralPath $zipPath -Force
-    }
-    if (Test-Path -LiteralPath $hashPath) {
-      Remove-Item -LiteralPath $hashPath -Force
-    }
-
-    Compress-Archive -LiteralPath $stageDir -DestinationPath $zipPath -CompressionLevel Optimal
-    $hash = Get-FileHash -LiteralPath $zipPath -Algorithm SHA256
-    Set-Content -LiteralPath $hashPath -Value "$($hash.Hash)  $([System.IO.Path]::GetFileName($zipPath))" -Encoding ASCII
-
-    return [pscustomobject]@{
-      Package = $Definition.Package
-      Version = $Version
-      ZipPath = $zipPath
-      Sha256 = $hash.Hash
-      HashPath = $hashPath
-    }
-  }
-  finally {
-    if (Test-Path -LiteralPath $stageRoot) {
-      Remove-Item -LiteralPath $stageRoot -Recurse -Force
-    }
-  }
-}
-
+Assert-SafeStagePath -Path $StageRoot
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
 
 Push-Location $RepoRoot
 try {
-  $trackedFiles = @(git ls-files)
-  $packages = if ($Package -eq "all") { @("thesis", "slides", "bundle") } else { @($Package) }
-  $results = foreach ($packageName in $packages) {
-    $definition = Get-PackageDefinition -PackageName $packageName -Version $Version
-    New-OnePackage -Definition $definition -TrackedFiles $trackedFiles
+  & npm run check:terminology
+  if ($LASTEXITCODE -ne 0) {
+    throw "Terminology check failed."
   }
 
-  $results | ConvertTo-Json
+  $SavedGitIndexFile = $env:GIT_INDEX_FILE
+  try {
+    Remove-Item Env:GIT_INDEX_FILE -ErrorAction SilentlyContinue
+    & node scripts/sync-public-preview.mjs --check
+    if ($LASTEXITCODE -ne 0) {
+      throw "Public preview drift check failed. Sync the preview repository before packaging."
+    }
+  }
+  finally {
+    if ([string]::IsNullOrWhiteSpace($SavedGitIndexFile)) {
+      Remove-Item Env:GIT_INDEX_FILE -ErrorAction SilentlyContinue
+    }
+    else {
+      $env:GIT_INDEX_FILE = $SavedGitIndexFile
+    }
+  }
+
+  $TrackedFiles = @(git ls-files)
+  $RequiredTrackedFiles = @(
+    "README.md",
+    "TERMS.md",
+    "VERSION.txt",
+    "package.json",
+    "Subagent_check/AGENTS.md",
+    "Subagent_evidence/AGENTS.md",
+    "Subagent_format_latex/AGENTS.md",
+    "Subagent_integrate/AGENTS.md",
+    "Subagent_presentation/AGENTS.md",
+    "Subagent_process_data/AGENTS.md",
+    "Subagent_regress_stata/AGENTS.md"
+  )
+  foreach ($RequiredPath in $RequiredTrackedFiles) {
+    if ($TrackedFiles -notcontains $RequiredPath) {
+      throw "Required release file is not tracked: $RequiredPath"
+    }
+  }
+  $UntrackedProductFiles = @(git ls-files --others --exclude-standard -- "Subagent_*" "package.json" "README.md" "TERMS.md" "VERSION.txt")
+  if ($UntrackedProductFiles.Count -gt 0) {
+    throw "Refusing release with untracked product files: $($UntrackedProductFiles -join ', ')"
+  }
+  $RepositoryVersion = (Get-Content -LiteralPath (Join-Path $RepoRoot "VERSION.txt") -Raw).Trim()
+  if ($Version -ne $RepositoryVersion) {
+    throw "Requested version $Version does not match VERSION.txt ($RepositoryVersion)."
+  }
+  if (Test-Path -LiteralPath $StageRoot) {
+    Remove-Item -LiteralPath $StageRoot -Recurse -Force
+  }
+  New-Item -ItemType Directory -Force -Path $StageDir | Out-Null
+
+  foreach ($RelativePath in $TrackedFiles) {
+    if (Test-ExcludedPath -Path $RelativePath) {
+      continue
+    }
+    $Source = Join-Path $RepoRoot $RelativePath
+    if (-not (Test-Path -LiteralPath $Source -PathType Leaf)) {
+      continue
+    }
+    $Target = Join-Path $StageDir $RelativePath
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Target) | Out-Null
+    Copy-Item -LiteralPath $Source -Destination $Target -Force
+  }
+
+  $PackageJsonPath = Join-Path $StageDir "package.json"
+  if (Test-Path -LiteralPath $PackageJsonPath) {
+    $PackageJson = Get-Content -LiteralPath $PackageJsonPath -Raw | ConvertFrom-Json
+    $FilteredScripts = [ordered]@{}
+    foreach ($Property in $PackageJson.scripts.PSObject.Properties) {
+      if ($Property.Name -notin @("preview:check", "preview:sync", "release:private", "test:preview")) {
+        $FilteredScripts[$Property.Name] = $Property.Value
+      }
+    }
+    $PackageJson.scripts = $FilteredScripts
+    $PackageJson | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $PackageJsonPath -Encoding UTF8
+  }
+
+  Set-Content -LiteralPath (Join-Path $StageDir "VERSION.txt") -Value $Version -Encoding UTF8
+  if (Test-Path -LiteralPath $ZipPath) {
+    Remove-Item -LiteralPath $ZipPath -Force
+  }
+  if (Test-Path -LiteralPath $HashPath) {
+    Remove-Item -LiteralPath $HashPath -Force
+  }
+
+  Compress-Archive -LiteralPath $StageDir -DestinationPath $ZipPath -CompressionLevel Optimal
+  $Hash = Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256
+  Set-Content -LiteralPath $HashPath -Value "$($Hash.Hash)  $([System.IO.Path]::GetFileName($ZipPath))" -Encoding ASCII
+
+  [pscustomobject]@{
+    Product = "Academic Research Assistant AI Agents"
+    Version = $Version
+    ZipPath = $ZipPath
+    Sha256 = $Hash.Hash
+    HashPath = $HashPath
+  } | ConvertTo-Json
 }
 finally {
   Pop-Location
+  Assert-SafeStagePath -Path $StageRoot
+  if (Test-Path -LiteralPath $StageRoot) {
+    Remove-Item -LiteralPath $StageRoot -Recurse -Force
+  }
 }

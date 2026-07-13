@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "source_manifest",
+  "type": "object",
+  "required": ["schema_version", "research_case", "case_id", "content_mode", "sources", "assets"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "research_case": {"type": "string", "minLength": 1},
+    "case_id": {"type": "string", "minLength": 1},
+    "content_mode": {"const": "layout_only"},
+    "entrypoint": {"type": ["string", "null"]},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "format", "target"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "pattern": "^inputs/"},
+          "format": {"enum": ["latex", "markdown"]},
+          "target": {"type": "string", "pattern": "^[^/].*\\.tex$"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "path", "target"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["figure", "bibliography", "latex_fragment", "csv_table"]},
+          "path": {"type": "string", "pattern": "^(inputs|assets)/"},
+          "target": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

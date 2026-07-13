@@ -1,3 +1,0 @@
-display_name: Paper Read
-short_description: Read one paper into a card and evidence ledger
-default_prompt: Read one academic paper into the active literature-review reading case, write cards/<citation_key>.md, and append audit-ready evidence rows without inventing claims.

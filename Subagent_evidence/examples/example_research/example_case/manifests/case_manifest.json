@@ -1,0 +1,7 @@
+{
+  "ingest_mode": "manual_entry",
+  "case_id": "example_case",
+  "case_type": "evidence",
+  "default_language": "en",
+  "content_mode": "evidence_bound"
+}

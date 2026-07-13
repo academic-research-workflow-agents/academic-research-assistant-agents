@@ -1,0 +1,3 @@
+display_name: Beamer Visual Asset
+short_description: Manage source-bound Beamer visuals
+default_prompt: Organize and validate presentation visuals while preserving source provenance and keeping visible text in TeX.

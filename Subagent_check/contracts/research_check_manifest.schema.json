@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "research_check_manifest",
+  "type": "object",
+  "required": ["schema_version", "research_case", "coordination_case_ref", "check_scope", "focus_targets", "check_tracks", "scan_policy", "report_preferences"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "research_case": {"type": "string", "minLength": 1},
+    "coordination_case_ref": {"type": "string", "minLength": 1},
+    "check_scope": {"type": "object"},
+    "focus_targets": {"type": "array", "items": {"type": "object"}},
+    "check_tracks": {"type": "array", "items": {"type": "object"}},
+    "scan_policy": {"type": "object"},
+    "report_preferences": {"type": "object"},
+    "last_resolved_target_refs": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

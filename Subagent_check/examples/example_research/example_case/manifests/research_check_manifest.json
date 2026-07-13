@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "coordination_case_ref": "../../../../Subagent_integrate/examples/example_research/example_case",
+  "check_scope": {"linked_cases": true},
+  "focus_targets": [],
+  "check_tracks": [{"track_name": "paths_and_manifests"}],
+  "scan_policy": {"read_only": true},
+  "report_preferences": {"markdown": true, "json": true},
+  "last_resolved_target_refs": []
+}

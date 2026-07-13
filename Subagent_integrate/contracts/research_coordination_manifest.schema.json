@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "research_coordination_manifest",
+  "type": "object",
+  "required": ["schema_version", "research_case", "active_mode", "requested_capabilities", "linked_cases", "capability_status", "blockers", "next_actions"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "research_case": {"type": "string", "minLength": 1},
+    "active_mode": {"enum": ["integration", "evidence", "data_preparation", "empirical_analysis", "document_formatting", "presentation"]},
+    "requested_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["evidence", "data_preparation", "empirical_analysis", "document_formatting", "presentation"]}
+    },
+    "linked_cases": {"type": "array", "items": {"type": "object"}},
+    "capability_status": {"type": "object"},
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "next_actions": {"type": "array", "items": {"type": "string"}},
+    "updated_at": {"type": "string"}
+  },
+  "additionalProperties": false
+}

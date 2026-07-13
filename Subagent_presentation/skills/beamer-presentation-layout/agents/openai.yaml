@@ -1,0 +1,3 @@
+display_name: Beamer Presentation Layout
+short_description: Assemble source-bound Beamer presentations
+default_prompt: Assemble the active Beamer case only from registered sources, label every frame, and validate provenance before rendering.

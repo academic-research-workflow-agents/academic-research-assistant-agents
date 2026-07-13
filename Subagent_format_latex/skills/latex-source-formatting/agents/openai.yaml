@@ -1,0 +1,3 @@
+display_name: LaTeX Source Formatting
+short_description: Format supplied text without adding academic content
+default_prompt: Format only the sources declared in the active layout-only case, preserve the supplied text, and report source hashes and technical build results.

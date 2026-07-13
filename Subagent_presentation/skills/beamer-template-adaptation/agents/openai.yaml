@@ -1,0 +1,3 @@
+display_name: Beamer Template Adaptation
+short_description: Adapt reusable Beamer templates safely
+default_prompt: Adapt the selected Beamer template, preserve provenance and licensing, and keep private branding outside the shared framework.

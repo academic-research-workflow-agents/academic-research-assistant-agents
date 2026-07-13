@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "case_id": "example_check",
+  "status": "pass",
+  "checks": {
+    "paths": "pass",
+    "contracts": "pass",
+    "source_traceability": "pass",
+    "compile": "not_run",
+    "capability_boundary": "pass"
+  },
+  "issues": [],
+  "record_mode": "synthetic"
+}

@@ -1,64 +1,53 @@
 # 发布与交付清单
 
-本文件用于从私有源码仓库生成付费版本包。
-
 ## 发布前检查
 
-1. 运行隐私扫描，确认没有 `.env`、API key、日志、PDF、真实数据、私人论文、机构模板或本地绝对路径。
-2. 运行轻量检查：
+1. 运行术语与能力边界检查：
 
    ```powershell
-   npm run check-source -- --case Subagent_deck/examples/example_slide/example_beamer_deck
-   python -m pytest Thesis_Agent\Subagent_process_data\skills\Codex-panel_builder_for_regression\tests
+   npm run check:terminology
    ```
 
-3. 生成三种版本包：
+2. 运行 public preview 测试并确认 sibling preview 与唯一内容源一致：
 
    ```powershell
-   .\scripts\New-PaidReleasePackage.ps1 -Version 0.1.0 -Package all
+   npm run test:preview
+   npm run preview:check
    ```
 
-4. 抽查 ZIP 内容：
-   - thesis 包只包含 `Thesis_Agent/` 和根说明文件；
-   - slides 包只包含 `Slides_Agent_Tex/` 和根说明文件；
-   - bundle 包包含两个 agent；
-   - 三个包都包含 `README.md`、`TERMS.md`、`VERSION.txt`；
-   - 三个包都不包含输出、缓存、日志、PDF、真实数据和私密文件。
+3. 运行 Python、数据和 presentation 测试。
+4. 确认仓库没有 `.env`、API key、日志、PDF、真实数据、私人研究材料、机构模板或绝对路径。
+5. 生成单一 private 版本包：
 
-5. 上传 ZIP 和 `.sha256.txt` 到交付用网盘或按订单开通私有仓库访问。
-6. 更新 public preview 仓库的版本记录和申请说明。
+   ```powershell
+   npm run release:private -- -Version 0.2.0
+   ```
 
-## 邮件申请处理
+6. 抽查 ZIP：根级说明与七个 subagent 必须存在；public preview 源、同步工具、`outputs/`、缓存、日志、PDF、私有材料和旧产品目录不得出现。
+7. 校验 `.sha256.txt` 后再交付。
 
-公开申请邮箱：
+## Public Preview 同步
 
-```text
-qinnrk@163.com
-```
+`distribution/public-preview/.public-preview-allowlist.json` 是公开文件清单。同步命令会验证：
 
-邮件标题：
+- private 与 preview 的版本号一致；
+- 目标 remote 是 `agents-preview`；
+- 执行同步前目标没有 tracked 修改；
+- allowlist 文件没有符号链接、路径越界或缺失；
+- `.preview-sync-manifest.json` 的逐文件哈希和聚合哈希一致。
 
-```text
-Academic Agents 访问申请 - GitHub用户名
-```
-
-邮件中应包含：
-
-- 需要的包：`Thesis Agent` / `Slides Agent Tex` / `Bundle`
-- 使用场景
-- GitHub username
-- 是否需要 private repo 访问或 ZIP 交付
+每次 private 正式发布前，先运行 `npm run preview:sync` 更新公开仓库，审阅并提交 preview
+仓库的受控改动，再运行 `npm run preview:check`。preview 仓库中不在上一份同步 manifest 内的
+未跟踪文件不属于同步器管理范围。
 
 ## 交付模板
 
-感谢申请 Academic Research Workflow Agents v0.1.0。
+感谢申请 Academic Research Assistant AI Agents。
 
-开通/交付内容：
-
-版本包：
+版本：
 
 下载链接或 private repo：
 
 SHA256：
 
-本版本为个人使用授权，可用于个人学习、研究、论文写作和学术展示准备；请勿转卖、公开分享、上传到公开仓库或转发给他人。该订单交付当前版本，不默认包含无限后续更新。
+本版本为个人使用授权，可用于学习、研究辅助、数据分析、用户原文排版和学术演示准备；请勿转卖、公开分享或转发给他人。

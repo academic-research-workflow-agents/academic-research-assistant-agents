@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "case_id": "example_formatting",
+  "content_mode": "layout_only",
+  "sources": [
+    {
+      "id": "user-main",
+      "path": "inputs/main.md",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "transformations": [
+    {
+      "source_id": "user-main",
+      "target": "outputs/latex/main.tex",
+      "method": "structural_markup_only",
+      "wording_preserved": true
+    }
+  ]
+}

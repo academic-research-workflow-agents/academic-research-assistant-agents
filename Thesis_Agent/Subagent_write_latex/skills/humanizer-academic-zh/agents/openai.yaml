@@ -1,7 +1,0 @@
-interface:
-  display_name: "学术 Humanizer（中文）"
-  short_description: "改写中文学术论文文本，去除空泛和明显 AI 套话。"
-  default_prompt: "Use $humanizer-academic-zh to revise this Chinese paper section into precise academic prose without inventing content or imposing formatting."
-
-policy:
-  allow_implicit_invocation: true

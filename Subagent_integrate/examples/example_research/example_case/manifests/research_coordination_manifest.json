@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "research_case": "example_research",
+  "active_mode": "integration",
+  "requested_capabilities": ["evidence", "data_preparation", "empirical_analysis", "document_formatting", "presentation"],
+  "linked_cases": [],
+  "capability_status": {},
+  "blockers": [],
+  "next_actions": []
+}
