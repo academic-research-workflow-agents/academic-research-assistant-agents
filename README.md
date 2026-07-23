@@ -35,33 +35,14 @@ npm run presentation:render -- --case examples/example_research/example_presenta
 npm run presentation:render:png -- --case examples/example_research/example_presentation
 ```
 
-## 检查与发布
+## 检查
 
 ```powershell
 npm run check:terminology
+npm run test:presentation
 python -m pytest
-npm run preview:check
-npm run release:private -- -Version 0.2.0
 ```
-
-发布脚本只生成一个 `Academic_Research_Assistant_AI_Agents_v<version>.zip`。
-
-## Private 与 Public Preview
-
-本 private 仓库是完整产品和 public preview 的唯一内容源。公开内容维护在
-`distribution/public-preview/`，通过以下命令单向同步到 sibling preview 仓库：
-
-```powershell
-npm run preview:sync -- --dry-run
-npm run preview:sync
-# 在 preview 仓库审阅并提交受控改动后：
-npm run preview:check
-```
-
-同步器只覆盖 allowlist 中的公开文件并清理不再公开的 tracked 文件；目标仓库中不属于
-上一份同步 manifest 的未跟踪文件不会被覆盖或删除。public preview 只包含说明、静态契约记录和一个极小的
-证据约束型 Beamer 演示，不包含完整 subagent、skills 或 private 工作流脚本。
 
 ## 隐私
 
-仓库只保存通用框架、脚本、契约、skills 和 synthetic examples。不要提交真实研究材料、真实数据、机构专属模板、运行输出、日志、归档、API keys 或本地私人信息。
+本仓库作为内部研究辅助框架，只保存通用脚本、契约、skills 和 synthetic examples。真实研究材料应留在受控的私有工作目录中；不要提交真实数据、机构专属模板、运行输出、日志、归档、API keys 或本地私人信息。

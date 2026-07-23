@@ -19,12 +19,39 @@ const legacySlideProduct = ["Slides", "Agent", "Tex"].join("_");
 const removedProseSkill = ["human", "izer"].join("");
 const removedFormatter = ["Subagent", "write", "latex"].join("_");
 const removedEvidenceName = ["Subagent", "read", "paper"].join("_");
+const retiredPaidToken = ["p", "aid"].join("");
+const retiredSourceRepository = ["agents", retiredPaidToken, "source"].join("-");
+const retiredPreviewRepository = ["agents", "preview"].join("-");
+const retiredPreviewConcept = ["public", "preview"].join("[\\s_-]+");
+const retiredPreviewSlug = ["public", "preview"].join("-");
+const retiredDistributionPath = ["distribution", retiredPreviewSlug].join("/");
+const retiredSyncScript = ["sync", retiredPreviewSlug].join("-");
+const retiredSyncLibrary = [retiredPreviewSlug, "lib"].join("-");
+const retiredPreviewTest = ["test", "public", "preview"].join("_");
+const retiredArchiveScript = ["New", "PaidReleasePackage"].join("-");
+const retiredPurchaseDocument = ["BU", "Y.md"].join("");
+const archiveSuffix = [".", "zip"].join("");
+const commercialEnglish = [
+  ["b", "uy"].join(""),
+  ["b", "uyer"].join(""),
+  ["p", "aid"].join(""),
+  ["s", "elling"].join(""),
+  ["p", "urchase"].join(""),
+  ["p", "ayment"].join(""),
+  ["r", "esale"].join(""),
+  ["r", "esell"].join(""),
+].join("|");
 const pathRules = [
   { label: "legacy product term", pattern: new RegExp(`(^|[/_.-])${legacyProduct}([/_.-]|$)`, "i") },
   { label: "legacy slide product", pattern: new RegExp(legacySlideProduct, "i") },
   { label: "removed prose skill", pattern: new RegExp(removedProseSkill, "i") },
   { label: "removed formatter name", pattern: new RegExp(removedFormatter, "i") },
   { label: "removed evidence name", pattern: new RegExp(removedEvidenceName, "i") },
+  { label: "retired distribution tree", pattern: new RegExp(`^${retiredDistributionPath}(?:/|$)`, "i") },
+  { label: "retired synchronization script", pattern: new RegExp(`${retiredSyncScript}|${retiredSyncLibrary}|${retiredPreviewTest}`, "i") },
+  { label: "retired archive script", pattern: new RegExp(retiredArchiveScript, "i") },
+  { label: "retired commercial document", pattern: new RegExp(`^(?:${retiredPurchaseDocument}|TERMS\\.md|RELEASE\\.md)$`, "i") },
+  { label: "archive must not be tracked", pattern: new RegExp(`${archiveSuffix.replace(".", "\\.")}$`, "i") },
 ];
 const textRules = [
   { label: "legacy product term", pattern: new RegExp(`\\b${legacyProduct}\\b`, "i") },
@@ -34,6 +61,12 @@ const textRules = [
   { label: "removed formatter name", pattern: new RegExp(removedFormatter, "i") },
   { label: "removed evidence name", pattern: new RegExp(removedEvidenceName, "i") },
   { label: "removed content term", pattern: new RegExp("\\u8bba\\u6587", "u") },
+  { label: "retired source repository", pattern: new RegExp(retiredSourceRepository, "i") },
+  { label: "retired preview repository", pattern: new RegExp(retiredPreviewRepository, "i") },
+  { label: "retired preview channel", pattern: new RegExp(retiredPreviewConcept, "i") },
+  { label: "commercial language", pattern: new RegExp("\\u8d2d\\u4e70|\\u4ed8\\u8d39|\\u552e\\u5356|\\u9500\\u552e|\\u8f6c\\u5356|\\u4ed8\\u6b3e|\\u4ef7\\u683c|\\u6388\\u6743\\u4ea4\\u4ed8", "u") },
+  { label: "commercial language", pattern: new RegExp(`\\b(?:${commercialEnglish})\\b`, "i") },
+  { label: "email address", pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i },
 ];
 const promptRules = [
   { label: "disallowed capability promise", pattern: new RegExp("\\u5199\\u4f5c|\\u6da6\\u8272|\\u6539\\u5199|\\u6269\\u5199|\\u751f\\u6210\\u5185\\u5bb9", "u") },

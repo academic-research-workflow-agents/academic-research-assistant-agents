@@ -1,20 +1,16 @@
 {
   "name": "academic-research-assistant-ai-agents",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Evidence-bound academic research assistance for data, formatting, and Beamer presentations.",
   "scripts": {
     "check:terminology": "node scripts/check-terminology.mjs",
-    "preview:check": "node scripts/sync-public-preview.mjs --check",
-    "preview:sync": "node scripts/sync-public-preview.mjs",
-    "release:private": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/New-PaidReleasePackage.ps1",
     "presentation:inspect": "node Subagent_presentation/scripts/inspect-case.mjs",
     "presentation:check-source": "node Subagent_presentation/scripts/check-source.mjs",
     "presentation:render": "node Subagent_presentation/scripts/render.mjs",
     "presentation:render:png": "node Subagent_presentation/scripts/render.mjs --png-only",
-    "test:presentation": "node --test Subagent_presentation/tests/*.test.mjs",
-    "test:preview": "node --test tests/test_public_preview.mjs"
+    "test:presentation": "node --test Subagent_presentation/tests/*.test.mjs"
   },
   "engines": {
     "node": ">=20"
