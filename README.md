@@ -2,7 +2,7 @@
 
 English name: **Academic Research Assistant AI Agents**
 
-这是一个单一的学术研究辅助框架，把可审计的研究流程拆成七个协作 subagent：
+这是一个学术研究辅助框架，把研究流程拆成七个协作 subagent：
 
 - `Subagent_evidence`：学术文献、证据卡、引用和页码记录
 - `Subagent_process_data`：数据清理、拼接和分析资产
