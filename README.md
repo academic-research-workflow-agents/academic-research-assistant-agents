@@ -4,19 +4,19 @@ English name: **Academic Research Assistant AI Agents**
 
 这是一个单一的学术研究辅助框架，把可审计的研究流程拆成七个协作 subagent：
 
-- `Subagent_evidence`：学术来源、证据卡、引用和页码记录
+- `Subagent_evidence`：学术文献、证据卡、引用和页码记录
 - `Subagent_process_data`：数据清理、拼接和分析资产
 - `Subagent_regress_stata`：Stata 执行、表图、诊断和结构化结果
-- `Subagent_format_latex`：用户原文的 LaTeX 排版、表图和参考文献处理
-- `Subagent_presentation`：有来源约束的 TeX/Beamer 演示文稿
+- `Subagent_format_latex`： LaTeX 排版、表图和参考文献处理
+- `Subagent_presentation`： TeX/Beamer 演示文稿
 - `Subagent_integrate`：按请求组合所需能力
 - `Subagent_check`：路径、契约、来源追踪、编译和边界检查
 
 ## 内容边界
 
-框架可以从用户提供的学术来源中提取和归类证据，可以执行数据与实证计算，也可以把用户原文排成 LaTeX 文档。
-
-它不会创建可直接提交的学术正文，也不会新增研究主张、发现、解释或结论。演示文稿中的可见信息必须来自已登记的用户材料或证据资产。
+从用户提供的学术文献中提取和归类信息
+对用户提供的原始数据进行清洗处理和实证分析
+将用户提供的原始文稿排成 LaTeX 文档或TeX/Beamer演示文稿
 
 ## Case 结构
 
