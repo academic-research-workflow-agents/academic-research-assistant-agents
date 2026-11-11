@@ -2,3 +2,7 @@
 -r requirements.txt
 PyMuPDF>=1.24,<2
 rapidocr-onnxruntime>=1.4,<2
+# Windows compatibility for the RapidOCR 1.x runtime.
+onnxruntime>=1.20,<1.21
+opencv-python>=4.8,<4.12
+numpy>=1.26,<2
