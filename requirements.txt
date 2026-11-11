@@ -1,0 +1,8 @@
+# Shared Python runtime and validation dependencies (Python 3.12, 64-bit).
+numpy>=1.26,<3
+pandas>=2.2,<3
+openpyxl>=3.1,<4
+xlrd>=2,<3
+pypdf>=5,<7
+PyYAML>=6,<7
+pytest>=8,<10
